@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Animated, Dimensions, Image } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Animated, Dimensions, Image, Linking, TouchableOpacity } from 'react-native';
 import { Stack } from 'expo-router';
 import { Colors, Spacing, Layout } from '@/constants/colors';
 import Header from '@/components/Header';
@@ -7,16 +7,7 @@ import Footer from '@/components/Footer';
 const { width } = Dimensions.get('window');
 const isWeb = width > 768;
 
-// Temporarily commented out until JPG import issue is resolved
-// const partnerLogos = [
-//   { uri: require('../assets/images/logoimg/IMG_9085.JPG'), key: 'partner1' },
-//   { uri: require('../assets/images/logoimg/IMG_9086.JPG'), key: 'partner2' },
-//   { uri: require('../assets/images/logoimg/IMG_9087.JPG'), key: 'partner3' },
-//   { uri: require('../assets/images/logoimg/IMG_9088.JPG'), key: 'partner4' },
-//   { uri: require('../assets/images/logoimg/IMG_9089.JPG'), key: 'partner5' },
-//   { uri: require('../assets/images/logoimg/IMG_9090.JPG'), key: 'partner6' },
-//   { uri: require('../assets/images/logoimg/IMG_9091.JPG'), key: 'partner7' },
-// ];
+
 
 const partnerLogos = [
   { uri: 'https://i.imgur.com/SmrYrvA.jpeg', key: 'partner1' },
@@ -34,9 +25,12 @@ interface EventCardProps {
   backgroundColor?: string;
   borderPosition?: 'top' | 'left';
   imageUri?: string;
+  buttonText?: string;
+  buttonActive?: boolean;
+  onButtonPress?: () => void;
 }
 
-function EventCard({ title, details, backgroundColor = Colors.white, borderPosition = 'top', imageUri }: EventCardProps) {
+function EventCard({ title, details, backgroundColor = Colors.white, borderPosition = 'top', imageUri, buttonText = "Registration Has Not Started Yet", buttonActive = false, onButtonPress }: EventCardProps) {
   const [isInView, setIsInView] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const translateY = useRef(new Animated.Value(30)).current;
@@ -114,9 +108,18 @@ function EventCard({ title, details, backgroundColor = Colors.white, borderPosit
           </Text>
         ))}
       </View>
-      <View style={styles.ctaButtonDisabled}>
-        <Text style={styles.ctaButtonDisabledText}>Registration Has Not Started Yet</Text>
-      </View>
+      <TouchableOpacity
+        style={[
+          buttonActive ? styles.ctaButtonActive : styles.ctaButtonDisabled,
+        ]}
+        onPress={onButtonPress}
+        disabled={!buttonActive}
+        activeOpacity={0.8}
+      >
+        <Text style={buttonActive ? styles.ctaButtonActiveText : styles.ctaButtonDisabledText}>
+          {buttonText}
+        </Text>
+      </TouchableOpacity>
     </Animated.View>
   );
 }
@@ -226,13 +229,16 @@ export default function ProgramsEventsPage() {
               backgroundColor={Colors.iceBlue}
               borderPosition="top"
               imageUri="https://i.imgur.com/0LksUGL.jpeg"
+              buttonActive={true}
+              buttonText="Register Now"
+              onButtonPress={() => Linking.openURL('https://bit.ly/4iDDBFH')}
               details={[
                 'A one-day, learning and networking event designed for legal CEOs, partners, and firm leaders. It is fun and information packed.  Hosted across Lagos, Abuja, Accra and other cities since 2022. Each edition brings together 70–200 top-tier lawyers for practical insights, strategic conversations, and high-value connections.',
                 'Register for Accra Lawyers Hangout',
                 'Date: February 21st, 2026',
                 'Time: 10:00 am',
                 'Venue: Sandbox Beach Club.',
-                'Registration link:  https://bit.ly/4iDDBFH.',
+               // 'Registration link:  https://bit.ly/4iDDBFH.',
               ]}
             />
 
@@ -459,6 +465,20 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600' as const,
     color: Colors.deepCharcoal,
+  },
+  ctaButtonActive: {
+    backgroundColor: '#FF6B35', // Orange color
+    paddingVertical: Spacing.md,
+    paddingHorizontal: Spacing.lg,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: 44,
+  },
+  ctaButtonActiveText: {
+    fontSize: 16,
+    fontWeight: '600' as const,
+    color: Colors.white, // White text
   },
   valuesStrip: {
     backgroundColor: Colors.iceBlue,
