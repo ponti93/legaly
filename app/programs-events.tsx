@@ -8,6 +8,16 @@ import Footer from '@/components/Footer';
 const { width } = Dimensions.get('window');
 const isWeb = width > 768;
 
+const partnerLogos = [
+  'https://drive.google.com/uc?export=view&id=1O4iVU0KbVGWapYgdz4iKiQzwzXpidEZk',
+  'https://drive.google.com/uc?export=view&id=11rfDEYfiRrN2SA3oAMSOQMMy5sYL9bwG',
+  'https://drive.google.com/uc?export=view&id=1CYeCbjPenymjmUBUDoNtrw-GQhY9uTbC',
+  'https://drive.google.com/uc?export=view&id=1OG8tZ9yGefNHQ9Zavocc4KKkb-nKbhwu',
+  'https://drive.google.com/uc?export=view&id=1lBqvRr0XMIKdltQNbe9619Oq4ePWod0V',
+  'https://drive.google.com/uc?export=view&id=10E9nvLuMZqLLfdtnJ1rK0BnopX_KpTOa',
+  'https://drive.google.com/uc?export=view&id=1zNNhKiflxuhFQC2f2oqs3RPB7QZSR3lH',
+];
+
 interface EventCardProps {
   title: string;
   details: string[];
@@ -227,6 +237,22 @@ export default function ProgramsEventsPage() {
 
           
           </View>
+
+          <AnimatedSection delay={600}>
+            <View style={styles.partnersSection}>
+              <Text style={styles.partnersTitle}>Our Partners</Text>
+              <View style={styles.partnersContainer}>
+                {partnerLogos.map((logo, index) => (
+                  <Image
+                    key={index}
+                    source={{ uri: logo }}
+                    style={styles.partnerLogo}
+                    resizeMode="contain"
+                  />
+                ))}
+              </View>
+            </View>
+          </AnimatedSection>
 
           <AnimatedSection delay={800}>
             <View style={styles.valuesStrip}>
@@ -467,5 +493,34 @@ const styles = StyleSheet.create({
   bannerImage: {
     width: '100%',
     height: '100%',
+  },
+  partnersSection: {
+    alignItems: 'center',
+    paddingHorizontal: isWeb ? Spacing.xl : Spacing.lg,
+    paddingVertical: isWeb ? Spacing.xxxl : Spacing.xxl,
+    width: '100%',
+    maxWidth: '100%',
+  },
+  partnersTitle: {
+    fontSize: isWeb ? 36 : 26,
+    fontWeight: '700' as const,
+    color: Colors.deepCharcoal,
+    marginBottom: Spacing.xl,
+    textAlign: 'center',
+  },
+  partnersContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap' as const,
+    justifyContent: 'center',
+    alignItems: 'center',
+    maxWidth: 1100,
+    alignSelf: 'center',
+    width: '100%',
+    gap: isWeb ? Spacing.xl : Spacing.lg,
+  },
+  partnerLogo: {
+    width: isWeb ? 140 : 80,
+    height: isWeb ? 60 : 40,
+    resizeMode: 'contain' as const,
   },
 });
