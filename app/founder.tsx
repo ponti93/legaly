@@ -32,7 +32,6 @@ export default function FounderPage() {
         >
           <HeroSection />
           <BiographySection />
-          <ContactSection />
           <PhotoPlaceholderSection />
           <DiscoverSection />
           <Footer />
@@ -246,56 +245,7 @@ function BiographySection() {
     </View>
   );
 }
-function ContactSection() {
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const scaleAnim = useRef(new Animated.Value(0.95)).current;
 
-  useEffect(() => {
-    Animated.parallel([
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 800,
-        delay: 300,
-        useNativeDriver: true,
-      }),
-      Animated.spring(scaleAnim, {
-        toValue: 1,
-        delay: 300,
-        useNativeDriver: true,
-        tension: 50,
-        friction: 7,
-      }),
-    ]).start();
-  }, []);
-
-  const handleContact = () => {
-    Linking.openURL('mailto:info@legallyyes.com?subject=Contact Rita');
-  };
-
-  return (
-    <View style={styles.contactContainer}>
-      <Animated.View
-        style={[
-          styles.contactContent,
-          {
-            opacity: fadeAnim,
-            transform: [{ scale: scaleAnim }],
-          },
-        ]}
-      >
-        <Text style={styles.contactHeading}>Get in Touch with Our Founder</Text>
-        <TouchableOpacity
-          style={styles.contactButton}
-          onPress={handleContact}
-          activeOpacity={0.8}
-        >
-          <Text style={styles.contactButtonText}>Contact Rita</Text>
-        </TouchableOpacity>
-      </Animated.View>
-    </View>
-  
-  );
-}
 function PhotoPlaceholderSection() {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(30)).current;
