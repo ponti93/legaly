@@ -4,18 +4,28 @@ import { Stack } from 'expo-router';
 import { Colors, Spacing, Layout } from '@/constants/colors';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-
 const { width } = Dimensions.get('window');
 const isWeb = width > 768;
 
+// Temporarily commented out until JPG import issue is resolved
+// const partnerLogos = [
+//   { uri: require('../assets/images/logoimg/IMG_9085.JPG'), key: 'partner1' },
+//   { uri: require('../assets/images/logoimg/IMG_9086.JPG'), key: 'partner2' },
+//   { uri: require('../assets/images/logoimg/IMG_9087.JPG'), key: 'partner3' },
+//   { uri: require('../assets/images/logoimg/IMG_9088.JPG'), key: 'partner4' },
+//   { uri: require('../assets/images/logoimg/IMG_9089.JPG'), key: 'partner5' },
+//   { uri: require('../assets/images/logoimg/IMG_9090.JPG'), key: 'partner6' },
+//   { uri: require('../assets/images/logoimg/IMG_9091.JPG'), key: 'partner7' },
+// ];
+
 const partnerLogos = [
-  'https://drive.google.com/uc?export=view&id=1O4iVU0KbVGWapYgdz4iKiQzwzXpidEZk',
-  'https://drive.google.com/uc?export=view&id=11rfDEYfiRrN2SA3oAMSOQMMy5sYL9bwG',
-  'https://drive.google.com/uc?export=view&id=1CYeCbjPenymjmUBUDoNtrw-GQhY9uTbC',
-  'https://drive.google.com/uc?export=view&id=1OG8tZ9yGefNHQ9Zavocc4KKkb-nKbhwu',
-  'https://drive.google.com/uc?export=view&id=1lBqvRr0XMIKdltQNbe9619Oq4ePWod0V',
-  'https://drive.google.com/uc?export=view&id=10E9nvLuMZqLLfdtnJ1rK0BnopX_KpTOa',
-  'https://drive.google.com/uc?export=view&id=1zNNhKiflxuhFQC2f2oqs3RPB7QZSR3lH',
+  { uri: 'https://i.imgur.com/SmrYrvA.jpeg', key: 'partner1' },
+  { uri: 'https://i.imgur.com/auEpI4Y.jpeg', key: 'partner2' },
+  { uri: 'https://i.imgur.com/aQdAM3W.jpeg', key: 'partner3' },
+  { uri: 'https://i.imgur.com/KHk4xqP.jpeg', key: 'partner4' },
+  { uri: 'https://i.imgur.com/D1ySdzh.jpeg', key: 'partner5' },
+  { uri: 'https://i.imgur.com/yuYnMeL.jpeg', key: 'partner6' },
+  { uri: 'https://i.imgur.com/qlMKhrd.jpeg', key: 'partner7' },
 ];
 
 interface EventCardProps {
@@ -23,9 +33,10 @@ interface EventCardProps {
   details: string[];
   backgroundColor?: string;
   borderPosition?: 'top' | 'left';
+  imageUri?: string;
 }
 
-function EventCard({ title, details, backgroundColor = Colors.white, borderPosition = 'top' }: EventCardProps) {
+function EventCard({ title, details, backgroundColor = Colors.white, borderPosition = 'top', imageUri }: EventCardProps) {
   const [isInView, setIsInView] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const translateY = useRef(new Animated.Value(30)).current;
@@ -87,6 +98,15 @@ function EventCard({ title, details, backgroundColor = Colors.white, borderPosit
       onTouchEnd={handlePressOut}
     >
       <Text style={styles.eventTitle}>{title}</Text>
+      {imageUri && (
+        <View style={styles.eventImageContainer}>
+          <Image
+            source={{ uri: imageUri }}
+            style={styles.eventImage}
+            resizeMode="contain"
+          />
+        </View>
+      )}
       <View style={styles.detailsContainer}>
         {details.map((detail, index) => (
           <Text key={index} style={styles.eventDetail}>
@@ -205,12 +225,13 @@ export default function ProgramsEventsPage() {
               title="Lawyers Hangout"
               backgroundColor={Colors.iceBlue}
               borderPosition="top"
+              imageUri="https://i.imgur.com/0LksUGL.jpeg"
               details={[
-                'A one-day, learning and networking event designed for legal CEOs, partners, and firm leaders. It is fun and information packed.  Hosted across Lagos, Abuja, Accra and other cities since 2022. Each edition brings together 70–200 top-tier lawyers for practical insights, strategic conversations, and high-value connections.', 
-                'Register for Accra Lawyers Hangout', 
-                'Date: February 21st, 2026', 
-                'Time: 10:00 am',  
-                'Venue: Sandbox Beach Club.',  
+                'A one-day, learning and networking event designed for legal CEOs, partners, and firm leaders. It is fun and information packed.  Hosted across Lagos, Abuja, Accra and other cities since 2022. Each edition brings together 70–200 top-tier lawyers for practical insights, strategic conversations, and high-value connections.',
+                'Register for Accra Lawyers Hangout',
+                'Date: February 21st, 2026',
+                'Time: 10:00 am',
+                'Venue: Sandbox Beach Club.',
                 'Registration link:  https://bit.ly/4iDDBFH.',
               ]}
             />
@@ -244,8 +265,8 @@ export default function ProgramsEventsPage() {
               <View style={styles.partnersContainer}>
                 {partnerLogos.map((logo, index) => (
                   <Image
-                    key={index}
-                    source={{ uri: logo }}
+                    key={logo.key}
+                    source={{ uri: logo.uri }}
                     style={styles.partnerLogo}
                     resizeMode="contain"
                   />
@@ -521,6 +542,17 @@ const styles = StyleSheet.create({
   partnerLogo: {
     width: isWeb ? 140 : 80,
     height: isWeb ? 60 : 40,
+    resizeMode: 'contain' as const,
+  },
+  eventImageContainer: {
+    width: '100%',
+    marginBottom: Spacing.lg,
+    borderRadius: 8,
+    overflow: 'hidden',
+  },
+  eventImage: {
+    width: '100%',
+    height: isWeb ? 250 : 150,
     resizeMode: 'contain' as const,
   },
 });
